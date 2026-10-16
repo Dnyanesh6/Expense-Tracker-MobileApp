@@ -214,16 +214,3 @@ enforced in the store queries on the server.
 
 ---
 
-## Demo script (for screenshots / recording)
-
-1. **Register** a new account → lands on Dashboard.
-2. **Dashboard** shows `₹0.00` and "0 expenses".
-3. **Add expense** — title "Lunch", amount `250.5`, Food, today's date, note.
-4. Dashboard updates: total and Food segment appear.
-5. Add a couple more in other categories.
-6. **Expenses** tab → search "lunch" → filter by category → set a date range.
-7. **Edit** an expense → change the amount → save → totals refresh.
-8. **Delete** an expense → confirm → it disappears.
-9. **Profile** → Sign out (confirm) → back to Login.
-10. Kill the server → pull-to-refresh → **network-error state with Retry**.
-# Expense-Tracker-MobileApp
