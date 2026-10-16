@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/ui/Button';
@@ -9,17 +10,25 @@ import { Radius, Spacing } from '@/constants/theme';
 import { useSession } from '@/context/AuthContext';
 import { useTheme } from '@/hooks/use-theme';
 import { API_BASE_URL } from '@/services/api';
+import { confirmAction } from '@/utils/confirm';
 
 export default function ProfileScreen() {
   const theme = useTheme();
+  const router = useRouter();
   const { session, signOut } = useSession();
   const user = session?.user;
 
-  function confirmSignOut() {
-    Alert.alert('Sign out', 'Are you sure you want to sign out of your account?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Sign out', style: 'destructive', onPress: () => void signOut() },
-    ]);
+  async function confirmSignOut() {
+    const accepted = await confirmAction({
+      title: 'Sign out',
+      message: 'Are you sure you want to sign out of your account?',
+      confirmLabel: 'Sign out',
+      destructive: true,
+    });
+    if (!accepted) return;
+
+    await signOut();
+    router.replace('/login');
   }
 
   const initials = (user?.name ?? '?')
@@ -49,7 +58,6 @@ export default function ProfileScreen() {
         </Card>
 
         <Button icon="log-out-outline" label="Sign out" onPress={confirmSignOut} variant="danger" />
-
         <Text style={[styles.footnote, { color: theme.textSecondary }]}>
           Every expense you create is scoped to your account on the server. Signing out clears the
           stored token from this device.

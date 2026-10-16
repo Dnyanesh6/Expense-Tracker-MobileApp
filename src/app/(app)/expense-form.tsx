@@ -3,7 +3,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -24,6 +23,7 @@ import { useTheme } from '@/hooks/use-theme';
 import { ApiError } from '@/services/api';
 import { createExpense, deleteExpense, getExpense, updateExpense } from '@/services/expenses';
 import type { Category } from '@/types';
+import { confirmAction } from '@/utils/confirm';
 import { formatDate, parseDateKey, toDateKey } from '@/utils/format';
 
 export default function ExpenseFormScreen() {
@@ -111,27 +111,27 @@ export default function ExpenseFormScreen() {
     }
   }
 
-  function handleDelete() {
+  async function handleDelete() {
     if (!id) return;
-    Alert.alert('Delete expense', 'This action cannot be undone. Delete this expense?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: async () => {
-          setBusy(true);
-          try {
-            await deleteExpense(id);
-            router.back();
-          } catch (error) {
-            setErrors({
-              form: error instanceof ApiError ? error.message : 'Could not delete the expense.',
-            });
-            setBusy(false);
-          }
-        },
-      },
-    ]);
+
+    const accepted = await confirmAction({
+      title: 'Delete expense',
+      message: 'This action cannot be undone. Delete this expense?',
+      confirmLabel: 'Delete',
+      destructive: true,
+    });
+    if (!accepted) return;
+
+    setBusy(true);
+    try {
+      await deleteExpense(id);
+      router.back();
+    } catch (error) {
+      setErrors({
+        form: error instanceof ApiError ? error.message : 'Could not delete the expense.',
+      });
+      setBusy(false);
+    }
   }
 
   if (isLoading) {
