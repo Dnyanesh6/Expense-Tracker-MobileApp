@@ -214,3 +214,5 @@ enforced in the store queries on the server.
 
 ---
 
+OpenCode Chat URL:  https://opncd.ai/share/3TQc2JIe
+
