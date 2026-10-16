@@ -107,7 +107,7 @@ cp .env.example .env
 
 ```dotenv
 # .env
-EXPO_PUBLIC_API_URL=http://192.168.1.100:4000   # ← your LAN IP
+EXPO_PUBLIC_API_URL=http://192.168.1.200:4000   # ← your LAN IP
 ```
 
 Find your LAN IP:
